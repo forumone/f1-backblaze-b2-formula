@@ -15,9 +15,6 @@ readonly b2_keep_days='{{ b2_keep_days }}'
 # Number of threads to use when syncing. Contributes to system load; choose wisely.
 readonly b2_threads='{{ b2_threads }}'
 
-# Name of destination bucket to upload to
-readonly b2_bucket='{{ b2_bucket }}'
-
 # SSM parameter (of type SecureString) containing the JSON-formatted payload
 readonly b2_ssm_prefix='{{ b2_ssm_prefix }}'
 
