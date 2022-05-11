@@ -251,7 +251,7 @@ fi
 sync_ok=1
 
 log_info "Running daily sync of $ofs_snapshot/vhosts"
-if b2 sync "${b2_sync_args[@]}" "$ofs_snapshot/vhosts" "b2://$b2_bucket/vhosts/" 2>&$log_fd; then
+if b2 sync "${b2_sync_args[@]}" "$snapshot_mount/vhosts" "b2://$b2_bucket/vhosts/" 2>&$log_fd; then
   log_info "Daily sync successful"
 else
   log_error "Daily sync failed (exit code $?); additional logs may be available above this message"
