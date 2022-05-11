@@ -20,6 +20,7 @@ b2:
     - user: root
     - group: root
     - mode: '0744'
+    - template: jinja
     - context:
         b2_keep_days: {{ salt['pillar.get']("b2:keep_days", 1) }}
         b2_threads: {{ salt['pillar.get']("b2:threads", 4) }}
