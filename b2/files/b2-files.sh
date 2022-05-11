@@ -213,7 +213,7 @@ b2 authorize-account 2>&$log_fd
 
 # Use awk to find the S3 bucket mounted on /var/www
 ofs_bucket="$(awk '$2 == "/var/www" { print $1 }' /etc/fstab)"
-if test -n "$ofs_bucket"; then
+if test -z "$ofs_bucket"; then
   log_error "Failed to find OFS bucket mounted on /var/www"
   exit 1
 fi
