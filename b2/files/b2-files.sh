@@ -34,7 +34,7 @@ readonly mail_from='{{ mail_from }}'
 readonly lockfile="/var/run/b2-files-backup.lock"
 
 # Name of the log file we copy output to
-logfile="$(mktemp b2-backups.log.XXXXXXXXXX)"
+logfile="$(mktemp --tmpdir b2-backups.log.XXXXXXXXXX)"
 
 # Open the log file as a file descriptor to pass into other commands
 # NB. Lockfile FD is 10
@@ -42,7 +42,7 @@ exec 11>"$logfile"
 readonly log_fd=11
 
 # Name of the temporary directory used to mount the OFS snapshot (see the cleanup function)
-snapshot_mount="$(mktemp -d b2-backups.mount.XXXXXXXXXX)"
+snapshot_mount="$(mktemp -d --tmpdir b2-backups.mount.XXXXXXXXXX)"
 
 # The backup date. Used to identify both the OFS snapshot as well as archive tarballs.
 date="$(date +%Y-%m-%d)"
@@ -274,7 +274,7 @@ if test "$(date +%w)" -eq 6; then
 
   # Attempt backups for every vhost. We capture failures and report them in aggregate at the end; the
   for vhost in "${vhost_dirs[@]}"; do
-    tarball="$(mktemp b2-backups.XXXXXXXXXX.tar.gz)"
+    tarball="$(mktemp --tmpdir b2-backups.XXXXXXXXXX.tar.gz)"
 
     source_dir="$snapshot_mount/vhosts/$vhost"
     target_file="vhosts-weekly/$vhost-$timestamp.tar.gz"
