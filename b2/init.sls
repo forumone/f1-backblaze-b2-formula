@@ -28,7 +28,7 @@ b2-files.sh:
         mail_to: "sysadmins@forumone.com"
         mail_from: "b2-backups@byf1.dev"
 
-/usr/local/sbin/b2-files.sh:
+export AWS_DEFAULT_REGION="us-east-2"; /usr/local/sbin/b2-files.sh:
   cron.present:
     - identifier: b2-files
     - user: root
