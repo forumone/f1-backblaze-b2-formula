@@ -245,9 +245,9 @@ fi
 #####
 # Sync and Backups
 
-# This flag determines if the backup was successful or not. We attempt to back
-# up as much as possible, even in the presence of failure, and report at the end
-# if we were 100% successful or not.
+# This flag determines if backups were successful or not. We try to back up as
+# much as possible, continuing even if errors occur during one phase and
+# reporting errors in aggregate.
 sync_ok=1
 
 log_info "Running daily sync of $ofs_snapshot/vhosts"
@@ -256,62 +256,6 @@ if b2 sync "${b2_sync_args[@]}" "$snapshot_mount/vhosts" "b2://$b2_bucket/vhosts
 else
   log_error "Daily sync failed (exit code $?); additional logs may be available above this message"
   sync_ok=
-fi
-
-# The %w format is the (numerical) day of the week beginning with Sunday; so 6 is Saturday
-if test "$(date +%w)" -eq 6; then
-  log_info "Running weekly archive of $ofs_snapshot/vhosts"
-
-  vhost_dirs=()
-  while IFS='' read -r line; do
-    # Don't archive the healthcheck vhost (this is purely Salt-managed)
-    if test "$line" != healthcheck; then
-      vhost_dirs+=("$line")
-    fi
-  done < <(ls "$snapshot_mount")
-
-  log_info "Discovered vhosts:" "${vhost_dirs[@]}"
-
-  # Attempt backups for every vhost. We capture failures and report them in aggregate at the end; the
-  for vhost in "${vhost_dirs[@]}"; do
-    tarball="$(mktemp --tmpdir b2-backups.XXXXXXXXXX.tar.gz)"
-
-    source_dir="$snapshot_mount/vhosts/$vhost"
-    target_file="vhosts-weekly/$vhost-$timestamp.tar.gz"
-
-    log_info "Archiving vhost $vhost from $source_dir to b2://$b2_bucket/$target_file"
-
-    # Unlike 'aws s3 cp', 'b2 sync' does not support uploading from stdin. We
-    # have to create the archive tarball separately on disk and then upload it
-    # to B2.
-    #
-    # We do both steps inside if blocks to capture possible failures and avoid
-    # having set -e abort our script early.
-    if ! tar czf "$tarball" -C "$source_dir" . 2>&$log_fd; then
-      log_error "[vhost $vhost] Failed to back up $source_dir to temporary file $tarball (exit code $?)"
-      rm -f "$tarball"
-
-      # Even though we failed here, there are only a limited number of
-      # conditions that would prevent _every_ backup from failing; so we
-      # continue to attempt archives of the other vhosts.
-      #
-      # However, we have to abandon this backup here.
-      sync_ok=
-      continue
-    fi
-
-    # b2 upload-file positional argument order: bucketName localFilePath b2FileName
-    # cf. https://b2-command-line-tool.readthedocs.io/en/master/subcommands/upload_file.html
-    if ! b2 upload-file "${b2_global_args[@]}" "$b2_bucket" "$tarball" "$target_file" 2>&$log_fd; then
-      log_error "[vhost $vhost] Failed to upload temporary file $tarball to b2://$b2_bucket/$target_file (exit code $?)"
-      rm -f "$tarball"
-
-      sync_ok=
-      continue
-    fi
-
-    log_info "Archived vhost $vhost to b2://$b2_bucket/$target_file"
-  done
 fi
 
 if test -n "$sync_ok"; then
