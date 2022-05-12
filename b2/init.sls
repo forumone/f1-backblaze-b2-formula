@@ -13,7 +13,7 @@ b2:
 {% set project = pillar.project %}
 {% endif %}
 
-/usr/local/sbin/b2-files.sh:
+b2-files.sh:
   file.managed:
     - name: /usr/local/sbin/b2-files.sh
     - source: salt://b2/files/b2-files.sh
@@ -28,12 +28,12 @@ b2:
         mail_to: "sysadmins@forumone.com"
         mail_from: "b2-backups@byf1.dev"
 
-b2-files.sh:
+/usr/local/sbin/b2-files.sh:
   cron.present:
     - identifier: b2-files
     - user: root
     - hour: 6
     - minute: random
     - require:
-        - /usr/local/sbin/b2-files.sh
+        - b2-files.sh
         - b2
