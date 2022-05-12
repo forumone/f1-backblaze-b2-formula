@@ -89,21 +89,21 @@ _Example:_
 ```
 terraform {
   required_providers {
-        aws = {
-          source  = "hashicorp/aws"
-          version = "~> 3.0"
-        }
-        random = {
-          source  = "hashicorp/random"
-          version = "~> 3.0"
-        }
-        okta = {
-          source  = "okta/okta"
-          version = "~> 3.10"
-        }
-        b2 = {
-          source  = "Backblaze/b2"
-          version = "0.8.0"
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
+    okta = {
+      source  = "okta/okta"
+      version = "~> 3.10"
+    }
+    b2 = {
+      source  = "Backblaze/b2"
+      version = "0.8.0"
     }
   }
   required_version = ">= 0.13.3"
