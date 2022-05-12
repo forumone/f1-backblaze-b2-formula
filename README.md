@@ -5,7 +5,11 @@ This formula installs the Backblaze B2 CLI utility, backup scripts, and crontab 
 Links to  `b2` documentation:
 https://b2-command-line-tool.readthedocs.io/en/master/
 
-To get this running in an existing `*-infrastructure` environment, the following must be added to the BuildKite pipeline for **all** build steps:  
+To get this running in an existing `*-infrastructure` environment...
+
+Region must be set for `aws ssm get-parameter` commands to succeed.  We can set it via the `awscli` configuration file in `~/.aws/config` using the `[default]` profile, or set it at runtime via the `AWS_DEFAULT_REGION` environment variable.  During this testing period we're exporting the `AWS_DEFAULT_REGION` variable as part of the `crontab` expression.
+
+The following must be added to the BuildKite pipeline for the **plan** and **apply** build steps:  
 _Example:_
 ```
     plugins:
@@ -85,21 +89,21 @@ _Example:_
 ```
 terraform {
   required_providers {
-        aws = {
-          source  = "hashicorp/aws"
-          version = "~> 3.0"
-        }
-        random = {
-          source  = "hashicorp/random"
-          version = "~> 3.0"
-        }
-        okta = {
-          source  = "okta/okta"
-          version = "~> 3.10"
-        }
-        b2 = {
-          source  = "Backblaze/b2"
-          version = "0.8.0"
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
+    okta = {
+      source  = "okta/okta"
+      version = "~> 3.10"
+    }
+    b2 = {
+      source  = "Backblaze/b2"
+      version = "0.8.0"
     }
   }
   required_version = ">= 0.13.3"
