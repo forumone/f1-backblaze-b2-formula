@@ -7,7 +7,7 @@ https://b2-command-line-tool.readthedocs.io/en/master/
 
 To get this running in an existing `*-infrastructure` environment...
 
-Region must be set for `aws ssm get-parameter` commands to succeed.  We can set it via the `awscli` configuration file in `~/.aws/config` using the `[default]` profile, or set it at runtime via the `AWS_DEFAULT_REGION` environment variable.  During this testing period we're exporting the `AWS_DEFAULT_REGION` variable as part of the `crontab` expression.
+A region must be set for `awscli` in order for `aws ssm get-parameter` commands to succeed.  We can set it via the `awscli` configuration file in `~/.aws/config` using the `[default]` profile, or set it at runtime via the `AWS_DEFAULT_REGION` environment variable.  During this testing period we're exporting the `AWS_DEFAULT_REGION` variable as part of the `crontab` expression.
 
 The following must be added to the BuildKite pipeline for the **plan** and **apply** build steps:  
 _Example:_
@@ -125,4 +125,18 @@ provider "aws" {
 provider "okta" {}
 
 provider "b2" {}
+```
+
+## Pillar configurable values
+
+This formula supports 2 configurable values in pillar data that modify arguments passed to the `b2 sync` commands:
+* `keep_days`:  Specifying `--keepDays` will delete any older versions more than the given number of days old, based on the modification time of the file. This option is not available when the destination is a local folder.  Not specifying a value in the pillar will make it default to `1`.
+
+* `threads`: The number of threads for syncing, downloading, and uploading.  Not specifying a value in the pillar will make it default to `4`.
+
+_Example Pillar Configuration_:
+```
+b2:
+  keep_days: 90
+  threads: 10
 ```
