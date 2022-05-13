@@ -139,3 +139,4 @@ _Example Pillar Configuration_:
 b2:
   keep_days: 90
   threads: 10
+```
