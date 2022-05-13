@@ -52,8 +52,8 @@ mysql-dump.sh:
 
 b2-mysql.sh:
   file.managed:
-    - name: /usr/local/sbin/mysql-dump.sh
-    - source: salt://b2/files/mysql-dump.sh
+    - name: /usr/local/sbin/b2-mysql.sh
+    - source: salt://b2/files/b2-mysql.sh
     - user: root
     - group: root
     - mode: '0744'
