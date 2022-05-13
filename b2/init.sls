@@ -1,6 +1,6 @@
 b2:
   file.managed:
-    - name: /usr/local/sbin/b2
+    - name: /usr/bin/b2
     - source: https://github.com/Backblaze/B2_Command_Line_Tool/releases/download/v3.4.0/b2-linux
     - user: root
     - group: root
