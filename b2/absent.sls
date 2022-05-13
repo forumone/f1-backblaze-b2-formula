@@ -1,6 +1,6 @@
 b2:
   file.absent:
-    - name: /usr/local/sbin/b2
+    - name: /usr/bin/b2
 
 b2-files.sh:
   file.absent:
